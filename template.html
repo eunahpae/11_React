@@ -5,20 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>createElement</title>
+    <!-- 1. React Core 라이브러리 (React의 핵심 기능) -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <!-- 2. ReactDOM 라이브러리 (브라우저 DOM에 렌더링) -->
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- 3. Babel: JSX를 브라우저가 이해할 수 있는 JS로 변환 -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 
 <body>
     <div id="root"></div>
 
-    <script>
-        // React.createElement('태그이름', 속성 객체, 자식 노드)
-        const greeting = React.createElement("h1", { className: "greeting" }, "Hello, React!!");
-        const reactElement = React.createElement("h3", { id: "name" }, "I'm Panda!!");
+    <script type="text/babel">
+        
 
-        // greeting 엘리먼트를 root에 렌더링
-        ReactDOM.createRoot(document.getElementById("root")).render([greeting, reactElement]);
+
+        ReactDOM.createRoot(document.getElementById("root")).render();
     </script>
 
 

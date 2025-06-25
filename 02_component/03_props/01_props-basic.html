@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>createElement</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+    <!--  props란?
+        - "properties"의 줄임말로, 컴포넌트에 전달되는 매개변수(속성)이다.
+        - 부모 컴포넌트가 자식 컴포넌트에게 데이터를 전달할 때 사용한다.
+        - 전달된 props는 읽기 전용(read-only)이며, 자식 컴포넌트 내부에서 직접 수정해서는 안 된다.
+        - 함수형 컴포넌트에서는 props를 매개변수로 받아 사용하며, 보통 구조 분해 할당을 통해 꺼낸다.
+
+        요약:
+        - 부모 → 자식 데이터 전달 수단
+        - 자식은 props를 받아서 출력만 (변경 ❌) -->
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        const name1 = '홍길동';
+        const name2 = '배은아';
+
+        function Title(props) {
+            console.log(props)
+            return <h1>안녕하세요, {props.name} 님 반갑습니다.</h1>
+        }
+
+        Title.defaultProps = {
+            name : '기본값'
+        }
+
+        ReactDOM.createRoot(document.getElementById("root")).render([
+            <Title name={name1} Ï />,
+            <Title name={name2} Ï />,
+            <Title name='리액트' Ï />,
+            <Title />
+        ]);
+    </script>
+
+
+</body>
+
+</html>

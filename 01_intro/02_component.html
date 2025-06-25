@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>createElement</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        /* 1. 클래스형 컴포넌트 정의 (컴포넌트 이름은 반드시 대문자로 시작해야 함) */
+        class TitleClass extends React.Component {
+            // 클래스형 컴포넌트는 반드시 render() 메서드를 정의해야 함
+            render() {
+                // JSX 대신 createElement로 엘리먼트를 반환
+                // <h1 class="classComponent">클래스형 컴포넌트입니다.</h1> 와 같은 역할
+                return React.createElement("h1", { className: "classComponent" }, "클래스형 컴포넌트입니다.")
+            }
+        }
+
+        /* 2. 함수형 컴포넌트 */
+        function TitleFuction() {
+            return React.createElement(
+                "h1",
+                { id: "test", calssName: "functionComponent" },
+                "함수형 컴포넌트 입니다.")
+        }
+
+
+        // React 18부터는 createRoot() 사용
+        // JSX 문법을 사용하여 컴포넌트를 렌더링
+        ReactDOM.createRoot(document.getElementById("root")).render(<TitleFuction />);
+    </script>
+
+</body>
+
+</html>

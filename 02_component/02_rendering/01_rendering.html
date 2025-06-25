@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>createElement</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        // 1. 정적 렌더링 컴포넌트
+        // - 컴포넌트가 한 번만 렌더링됨
+        // - 페이지가 처음 로딩될 때의 시간만 표시됨 (이후 자동 갱신 X)
+        function BasicRender() {
+            return (
+                <div style={{ border: '1px solid gray', padding: '10px' }}>
+                    <h2>정적 렌더링</h2>
+                    <h3>지금은 {new Date().toLocaleTimeString()} 입니다.</h3>
+                </div>
+            );
+        }
+
+        // 2. 동적 상태 업데이트 (Live Clock) / (Virtual DOM 체험)
+        // - useState로 상태(time) 선언
+        // - useEffect로 1초마다 시간 갱신
+        function LiveClock() {
+            const [time, setTime] = React.useState(new Date());
+
+            // 컴포넌트가 처음 마운트될 때 setInterval 시작
+            // - 1초마다 새로운 시간 객체로 상태 업데이트
+            // - 언마운트 시 clearInterval로 타이머 정리 (메모리 누수 방지)
+            React.useEffect(() => {
+                const timer = setInterval(() => setTime(new Date()), 1000);
+                return () => clearInterval(timer);
+            }, []);
+
+            return (
+                <>
+                    <h2>실시간 시계</h2>
+                    <h3>현재 시간 : {time.toLocaleTimeString()}</h3>
+                </>
+            );
+        }
+
+        // 3. 조건부 렌더링 컴포넌트
+        function ConditionalMessage() {
+            // 사용자에게 질문을 던지고 입력을 숫자로 변환
+            const answer = parseInt(prompt('리액트가 재미있으신가요?\n1. 재미있다.\n2. 어렵다.'));
+
+            // 삼항 연산자를 사용해 조건에 따라 다른 JSX 엘리먼트 선택
+            const element = answer === 1
+                ? <h3>앞으로 점점 재미있어져요~</h3>      // 사용자가 1을 입력한 경우
+                : <h3>천천히 복습해 보세요~</h3>;         // 2 또는 다른 숫자를 입력한 경우
+
+            // JSX 반환: 사용자 입력이 있으면 element 출력, 없으면 안내 메시지 출력
+            return (
+                <>
+                    <h2>조건부 렌더링</h2>
+                    {
+                        answer                // truthy한 값(1, 2 등)이면
+                            ? element         // 위에서 정의한 element 출력
+                            : <h4>질문에 답변 입력 중..</h4>  // 입력이 없는 경우
+                    }
+                </>
+            );
+        }
+
+        // 4. 컴포넌트 합성
+        function App() {
+            return (
+                <>
+                    {/* 1. 정적 렌더링 컴포넌트 (고정된 시간 출력) */}
+                    <BasicRender />
+
+                    {/* 2. 실시간 시계 컴포넌트 (1초마다 갱신) */}
+                    <LiveClock />
+
+                    {/* 3. 조건부 렌더링 컴포넌트 (사용자 입력에 따라 출력 달라짐) */}
+                    <ConditionalMessage />
+                </>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+
+
+</body>
+
+</html>

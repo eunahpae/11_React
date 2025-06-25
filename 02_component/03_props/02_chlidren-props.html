@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>createElement</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        // 자식 노드를 출력하는 컴포넌트
+        function ChildModePrinter(props) {
+            // 전달된 props를 콘솔로 확인
+            console.log(props);
+
+            return (
+                <>
+                    <h1>자식 노드가 가지고 있는 값은?</h1>
+
+                    {/* props.children: 부모 컴포넌트가 자식으로 넘긴 요소(텍스트, 태그 등)를 받을 수 있는 예약 속성 */}
+                    <h3>children : {props.children}</h3>
+                </>
+            );
+        }
+
+        // 렌더링: 같은 컴포넌트를 두 번 호출하지만 children 값이 다름
+        ReactDOM.createRoot(document.getElementById("root")).render([
+            // 첫 번째는 문자열을 자식으로 전달
+            <ChildModePrinter>텍스트 노드</ChildModePrinter>,
+
+            // 두 번째는 JSX 요소를 자식으로 전달
+            <ChildModePrinter><div>텍스트 노드</div></ChildModePrinter>
+        ]);
+    </script>
+
+
+</body>
+
+</html>

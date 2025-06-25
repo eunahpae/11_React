@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PropsPractice</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        // 사용자 정보 객체 3개 선언
+        const user = {
+            name: '판다',
+            age: 10,
+            phone: '010-1111-2222',
+            email: 'panda@gmail.com'
+        }
+
+        const user2 = {
+            name: '코알라',
+            age: 20,
+            phone: '010-2222-3333',
+            email: 'koala@gmail.com'
+        }
+
+        const user3 = {
+            name: '호랑이',
+            age: 30,
+            phone: '010-3333-4444',
+            email: 'tiger@gmail.com'
+        }
+
+        // 위 사용자 객체의 각 속성을 표시하기 위한 개별 컴포넌트 정의
+        function NameCard({ name }) {
+            return <h1>{name}</h1>;
+        }
+
+        function AgeCard({ age }) {
+            return <h2>{age}</h2>;
+        }
+
+        function PhoneCard({ phone }) {
+            return <h3>{phone}</h3>;
+        }
+
+        function EmailCard({ email }) {
+            return <h3>{email}</h3>;
+        }
+
+        // 하나의 사용자 정보를 묶어서 보여주는 컴포넌트
+        function UserInfo({ user }) {
+            return (
+                <div style={{ border: '1px solid gray', padding: '10px' }}>
+                    {/* 하위 컴포넌트에 각각의 속성을 props로 전달 */}
+                    <NameCard name={user.name} />
+                    <AgeCard age={user.age} />
+                    <PhoneCard phone={user.phone} />
+                    <EmailCard email={user.email} />
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById("root")).render(
+            [
+                // 3명의 사용자 정보를 각각 UserInfo 컴포넌트로 렌더링
+                <UserInfo user={user} />,
+                <UserInfo user={user2} />,
+                <UserInfo user={user3} />
+            ]
+        );
+    </script>
+
+</body>
+
+</html>
