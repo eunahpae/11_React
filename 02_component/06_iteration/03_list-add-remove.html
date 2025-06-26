@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>listAddRemove</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        const { useState } = React;
+
+        function NameList() {
+
+            // 입력창에 입력되는 값을 상태로 관리
+            const [inputValue, setInputValue] = useState('');
+            // 이름 목록을 배열 상태로 관리
+            const [names, setNames] = useState([{ id: 1, text: '판다' }]);
+            // 다음에 추가될 항목의 id 값을 상태로 관리
+            const [nextId, setNextId] = useState(2);
+            // 입력창에 변화가 생길 때마다 상태 업데이트
+            const handleChange = (e) => setInputValue(e.target.value);
+
+           // "추가" 버튼 클릭 시 실행되는 함수
+            const handleAdd = () => {
+                if (inputValue.trim() === '') return; // 공백 입력 방지
+                // 새 항목 객체 생성
+                const newName = { id: nextId, text: inputValue };
+                // 기존 배열에 새 항목 추가 (불변성 유지)
+                setNames([...names, newName]);
+                // 다음 id 증가
+                setNextId(nextId + 1);
+                // 입력창 초기화
+                setInputValue('');
+            };
+
+            return (
+                <>
+                    <input type="text" value={inputValue} onChange={handleChange} placeholder="이름을 입력하세요." />
+                    <button onClick={handleAdd}>추가</button>
+
+                    <ul>
+                        {names.map(name => (
+                            <li key={name.id}>{name.text}</li>  // 객체 전체 출력 → .text만 출력하도록 수정
+                        ))}
+                    </ul>
+                </>
+            )
+
+        }
+
+        ReactDOM.createRoot(document.getElementById("root")).render(<NameList />);
+    </script>
+
+</body>
+
+</html>

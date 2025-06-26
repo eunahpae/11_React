@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eventSystem</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        class EventButton extends React.Component {
+            constructor(props) {
+                super(props);
+            }
+
+            // 방법 1: 인라인 함수로 직접 이벤트 처리
+            // - 코드가 간결함
+            // - 단점: 렌더링될 때마다 새로운 함수가 생성되어 성능에 영향을 줄 수 있음
+            // render() {
+            //     return (
+            //         <button onClick={() => alert('인라인 함수 이벤트 동작 확인')}>
+            //             {this.props.children}
+            //         </button>
+            //     );
+            // }
+
+            // 방법 2: 클래스 메서드로 이벤트 핸들러 정의
+            // - 외부에서 메서드를 미리 정의해 재사용 가능
+            // - 렌더링 시 함수가 재생성되지 않아 성능상 유리함
+            onClickHandler = () => {
+                alert('외부 함수 이벤트 동작 확인');
+            };
+
+            // render() {
+            //     return (
+            //         <button onClick={this.onClickHandler}>
+            //             {this.props.children}
+            //         </button>
+            //     );
+            // }
+
+            // 방법 3: props로 전달받은 이벤트 핸들러 사용
+            // - 이벤트 동작을 컴포넌트 외부에서 정의 가능
+            // - 컴포넌트의 재사용성과 유연성이 증가함
+            render() {
+                const { onClick, children } = this.props;
+                return (
+                    <button onClick={onClick}>{children}</button>
+                );
+            }
+        }
+
+        ReactDOM.createRoot(document.getElementById("root")).render(
+            //<EventButton>이벤트 버튼</EventButton>
+            /* 3번 테스트용 버튼 */
+            <EventButton onClick={() => alert('props로 이벤트 전달 후 연결 확인')}>버튼</EventButton>
+        );
+    </script>
+
+</body>
+
+</html>

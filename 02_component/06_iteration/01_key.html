@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iterationKey</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <!-- 
+        📌 배열의 map 문법 설명
+
+        배열.map(callback);
+
+        ✅ map() 메서드란?
+        - 배열의 각 요소에 대해 **지정된 callback 함수**를 한 번씩 호출하여,
+        **변환된 결과를 새로운 배열로 반환**하는 메서드이다.
+        - 원본 배열은 변경되지 않음 (비파괴적)
+
+        ✅ callback 함수란?
+        - 배열 요소를 어떻게 변환할지 규칙을 정의한 함수
+        - 최대 3개의 파라미터(매개변수)를 가질 수 있음:
+
+            1. currentValue: 현재 처리 중인 배열 요소
+            2. index       : 현재 요소의 인덱스 (선택적)
+            3. array       : map을 호출한 원본 배열 전체 (선택적)
+
+        ✅ 예시:
+        const arr = [1, 2, 3];
+        const doubled = arr.map((num) => num * 2);
+        console.log(doubled);  // [2, 4, 6]
+
+        ✅ 예시 (모든 파라미터 사용):
+        arr.map((value, index, array) => {
+            console.log(value, index, array);
+            return value + 1;
+        });
+
+        📝 map()은 필터링이나 반복 출력이 아닌,
+        **값을 가공하거나 변환하여 새 배열을 만드는 데** 적합하다.
+    -->
+
+
+    <script type="text/babel">
+        const numbers = [1, 2, 3, 4, 5]
+        const results = numbers.map(num => num * num);
+        console.log(results);
+
+        const fruit = ['🥝', '🍓', '🍑']
+        fruit.map((currentValue, index, array) => {
+            console.log(currentValue);
+            console.log(index);
+            console.log(array);
+        })
+
+        function Items({ names }) {
+
+            return (
+                <>
+                    <ul>
+                        {names.map(name => <li>{name}</li>)}
+                    </ul>
+                </>
+            )
+
+        }
+
+        const names = ['판다', '코알라', '호랑이']
+
+        ReactDOM.createRoot(document.getElementById("root")).render(<Items names={names} />);
+    </script>
+
+</body>
+
+</html>
