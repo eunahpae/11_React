@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>useState</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        console.log(React);
+
+        // React에서 useState Hook을 구조분해 할당으로 가져옴
+        const { useState } = React;
+
+        // 함수형 컴포넌트 정의
+        function Say() {
+            /*
+              message: 현재 상태 값
+              setMessage: 상태를 변경할 수 있는 함수
+              useState('기본상태'): 초기 상태를 '기본상태'로 설정
+            */
+            const [message, setMessage] = useState('기본상태');
+            const [color, setColor] = useState('black');
+            const [backgroundColor, setBackgroundColor] = useState('white');
+
+            // 버튼 클릭 시 message를 '안녕하세요!'로 변경
+            const onClickEnter = () => setMessage('안녕하세요!');
+            // 버튼 클릭 시 message를 '안녕히 가세요!'로 변경
+            const onClickLeave = () => setMessage('안녕히 가세요!');
+
+            return (
+                <>
+                    <h2>함수형 컴포넌트</h2>
+                    <h3 style={{ color, backgroundColor }}>{message}</h3>
+                    <button onClick={onClickEnter}>입장</button>
+                    <button onClick={onClickLeave}>퇴장</button>
+                    <div>
+                        <button onClick={() => setColor('red')}>빨간색</button>
+                        <button onClick={() => setColor('green')}>초록색</button>
+                    </div>
+                    <div>
+                        <button onClick={() => setBackgroundColor('white')}>기본 배경</button>
+                        <button onClick={() => setBackgroundColor('black')}>반전 배경</button>
+                    </div>
+                </>
+            )
+        }
+
+        ReactDOM.createRoot(document.getElementById("root")).render(<Say />);
+    </script>
+
+</body>
+
+</html>
