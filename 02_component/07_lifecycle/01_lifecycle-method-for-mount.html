@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        // ✅ 클래스형 컴포넌트 정의
+        class Greeting extends React.Component {
+            // 🔸 생성자: 컴포넌트 인스턴스가 처음 생성될 때 호출됨
+            constructor(props) {
+                super(props); // 부모 클래스(React.Component)의 생성자 호출
+                console.log('constructor');
+
+                // 🔸 state 초기화 (컴포넌트 내부에서 사용하는 데이터)
+                this.state = {
+                    text: '초기값'
+                };
+            }
+
+            // 🔸 getDerivedStateFromProps: props 변경에 따라 state를 업데이트할 수 있는 정적 메서드
+            // ※ render 이전에 호출되며, 클래스 메서드가 아닌 static으로 선언해야 함
+            static getDerivedStateFromProps(props, state) {
+                console.log('getDerivedStateFromProps');
+                console.log('props:', props);
+                console.log('state:', state);
+
+                // props.text 값이 현재 state.text와 다르면 state를 업데이트
+                if (props.text !== state.text) {
+                    return { text: props.text }; // 반환된 객체는 새로운 state로 병합됨
+                }
+                return null; // 반환값이 null이면 state 변경 없음
+            }
+
+            // 🔸 render: 화면(UI)을 실제로 그리는 메서드 (필수 구현)
+            render() {
+                console.log('render');
+                // this.setState({text:'주의사항 테스트'});
+                // ❌ 주의: render() 내부에서는 setState()를 절대 호출하지 말 것!
+                // 그 이유: setState → render 재호출 → 다시 setState → 무한 루프 발생
+
+                return (
+                    <>
+                        <h1>현재 상태값: {this.state.text}</h1>
+                    </>
+                );
+            }
+
+            // 🔸 componentDidMount: 컴포넌트가 마운트된 직후(화면에 나타난 직후) 한 번 호출됨
+            componentDidMount() {
+                console.log('componentDidMount');
+
+                // ⛏️ 여기서 다음과 같은 작업 가능:
+                // - 외부 API 호출 (fetch, axios 등)
+                // - setTimeout, setInterval 등록
+                // - 외부 라이브러리(D3.js, Chart.js 등) 초기화
+                // - DOM 요소 직접 접근 필요할 때
+            }
+        }
+
+        // 🔸 Greeting 컴포넌트 렌더링: props로 text="hello" 전달
+        ReactDOM.createRoot(document.getElementById("root")).render(<Greeting text="hello" />);
+    </script>
+
+</body>
+
+</html>

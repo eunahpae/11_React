@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>github-api-emoji</title>
+    <!-- 1. React Core 라이브러리 -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <!-- 2. ReactDOM 라이브러리 -->
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- 3. Babel: JSX 변환 -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- 4. axios CDN -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        function SearchBox({ setImgUrl }) {
+            const [emojiName, setEmojiName] = useState('');
+
+            // 입력값 변경 시 상태 업데이트
+            const onChangeHandler = (e) => {
+                setEmojiName(e.target.value);
+            };
+
+            // 버튼 클릭 시 GitHub Emoji API 호출
+            const onClickHandler = () => {
+                axios.get('https://api.github.com/emojis')
+                    .then(response => {
+                        // console.log(response.data); // 전체 이모지 목록 출력
+                        setImgUrl(response.data[emojiName]); // 입력값에 해당하는 이모지 URL 설정
+                    })
+                    .catch(error => {
+                        console.error('에러 발생:', error.message);
+                        setImgUrl(''); // 실패 시 초기화
+                    });
+            };
+
+            return (
+                <>
+                    <input type="text" onChange={onChangeHandler} placeholder="이모지 이름 입력" />
+                    <button onClick={onClickHandler}>검색</button>
+                </>
+            );
+        }
+
+        function ImageBox({ imgUrl }) {
+            // emojiUrl이 존재하면 이모지 출력, 없으면 빈값 출력
+            return imgUrl ? <img src={imgUrl} alt="emoji" /> : <></>;
+        }
+
+        function App() {
+            const [imgUrl, setImgUrl] = useState('');
+
+            return (
+                <>
+                    <SearchBox setImgUrl={setImgUrl} />
+                    <br />
+                    <ImageBox imgUrl={imgUrl} />
+                </>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+
+</body>
+
+</html>

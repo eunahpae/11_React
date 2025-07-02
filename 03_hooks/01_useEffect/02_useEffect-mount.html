@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>useEffect-mount</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        // React의 useState와 useEffect 훅 사용
+        const { useState, useEffect } = React;
+
+        function TimePeinter() {
+
+            // 현재 시간을 상태로 관리
+            const [time, setTime] = useState(new Date().toLocaleTimeString());
+
+            console.log('렌더링...'); // 컴포넌트가 렌더링될 때마다 출력
+
+            // 컴포넌트가 처음 마운트될 때 한 번만 실행됨
+            useEffect(() => {
+                console.log('useEffect 동작');
+            }, // 마운트 이후에 실행
+                []); // 빈 배열 → 의존성이 없으므로 최초 마운트 시에만 실행됨
+
+            return (
+                <>
+                    {/* 버튼 클릭 시 현재 시간 갱신 */}
+                    <button onClick={() => setTime(new Date().toLocaleTimeString())}>
+                        현재 시간 확인하기
+                    </button>
+
+                    {/* 현재 시간 출력 */}
+                    <h1>{time}</h1>
+                </>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById("root")).render(<TimePeinter />);
+    </script>
+
+</body>
+
+</html>

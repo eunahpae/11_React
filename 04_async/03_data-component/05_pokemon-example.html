@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon API example</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        .card {
+            border: 1px solid black;
+            width: 300px;
+            margin: 10px;
+            padding: 20px;
+            display: inline-block;
+        }
+
+        .card>* {
+            display: inline-block;
+        }
+
+        .card>img {
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        const { useState, useEffect } = React;
+
+        function Title() {
+            return (
+                <h1>포켓몬 목록</h1>
+            )
+        }
+
+        function PokemonList() {
+
+            // 전체 포켓몬 목록에 대한 api 요청
+            // https://pokeapi.co/api/v2/pokemon
+
+            const [pokemonList, setPokemonList] = useState([]);
+
+            function getPokemonList() {
+                return new Promise((resolve) => {
+                    fetch('https://pokeapi.co/api/v2/pokemon')
+                        .then(response => resolve(response))
+                });
+            }
+
+            useEffect(() => {
+                const loadData = async () => {
+                    const response = await getPokemonList();
+                    const data = await response.json();
+
+                    console.log("PokemonList: ", data);
+
+                    setPokemonList(data.results);
+                }
+                loadData();
+            }, []
+            );
+
+            return (
+                <div>
+                    {pokemonList && pokemonList.map((pokemon) => (
+                        <Card key={pokemon.name} url={pokemon.url} />
+                    ))}
+                </div>
+            );
+        }
+
+        function Card({ url }) {
+
+            const [pokemon, setPokemon] = useState();
+
+            useEffect(() => {
+                const loadPokemon = async () => {
+                    const response = await fetch(url);
+                    const data = await response.json();
+
+                    console.log("pokemon: ", data);
+
+                    setPokemon(data);
+                }
+                loadPokemon();
+            }, []
+            )
+
+            // 한 포켓몬의 이미지 주소 요청 (이전 api 요청 결과의 url 속성으로 존재함)
+            // ex. https://pokeapi.co/api/v2/pokemon/1
+            // sprites.front_default 속성 이미지 사용
+
+            return (
+                <div className="card">
+                   {pokemon &&
+                        <>
+                            <img src={pokemon.sprites.front_default} />
+                            <div>
+                                <h2>No. {pokemon.id} </h2>
+                                <h3>Name : {pokemon.name} </h3>
+                            </div>
+                        </>
+                    }
+                </div>
+            )
+        }
+
+        function App() {
+            return (
+                <>
+                    <Title />
+                    <PokemonList />
+                </>
+            )
+        }
+
+        ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>useEffect-cleanup</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        // React의 useState와 useEffect 훅 사용
+        const { useState, useEffect } = React;
+
+        function Counter() {
+
+            const [count, setCount] = useState(0);
+            useEffect(() => {
+                console.log('useEffect 동작');
+
+                // 💡 반환되는 함수는 "클린업(정리) 함수"로 기능한다.
+                // 컴포넌트가 언마운트되거나, 이 effect가 다시 실행되기 전 호출됨
+                return () => {
+                    console.log('clean-up');  // 정리 작업: 예) 타이머 제거, 이벤트 제거 등
+                };
+            })
+
+            return (
+                <>
+                    <h1>count : {count}</h1>
+                    <button onClick={() => setCount(count + 1)}>+1</button>
+                </>
+            )
+
+        }
+
+        ReactDOM.createRoot(document.getElementById("root")).render(<Counter />);
+    </script>
+
+</body>
+
+</html>

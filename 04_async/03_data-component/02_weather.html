@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherAPI</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        const API_KEY = '';
+        const { useState, useEffect } = React;
+
+        function Weather() {
+
+            const [position, setPosition] = useState({ latitude: '', longitude: '' });
+            const [cityName, setCityName] = useState('');
+            const [weather, setWeather] = useState('');
+            const [wind, setWind] = useState('');
+
+            useEffect(() => {
+
+                fetch('https://ipapi.co/json')
+                    .then(res => res.json())
+                    .then(data => {
+                        const latitude = data.latitude;
+                        const longitude = data.longitude;
+
+                        console.log("위도 : ", latitude);
+                        console.log("경도 : ", longitude);
+
+                        setPosition({ latitude, longitude });
+
+                        return fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`);
+
+                    })
+                    .then(response => response.json())
+                    .then(json => {
+
+                        console.log(json);
+                        setCityName(json.name);
+                        setWeather(json.weather[0]);
+                        setWind(json.wind);
+                    })
+            }, []
+            )
+
+            return (
+                <>
+                    <h3>현재 위치</h3>
+                    <h4>{`경도: ${position.longitude} 위도: ${position.latitude}`}</h4>
+                    <h4>{`조회 도시: ${cityName}`}</h4>
+                    <h4>{`날씨: ${weather.main} 날씨설명: ${weather.description}`}</h4>
+                    <h4>{`풍향: ${wind.deg}도 풍속: ${wind.speed}m / s`}</h4>
+                </>
+            )
+        }
+
+        function App() {
+            return (
+                <>
+                    <h1>오늘의 날씨</h1>
+                    <Weather />
+                </>
+            )
+        }
+
+        ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+
+</body>
+
+</html>

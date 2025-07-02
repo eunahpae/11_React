@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>useEffect-cleanup</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        // React의 useState와 useEffect 훅 사용
+        const { useState, useEffect } = React;
+
+        // 타이머 컴포넌트
+        function Timer() {
+
+            useEffect(() => {
+                console.log('Timer 시작...'); // 마운트 직후 출력
+
+                // 1초마다 현재 시간을 콘솔에 출력하는 타이머 시작
+                const timer = setInterval(() => {
+                    console.log(new Date().toLocaleTimeString());
+                }, 1000);
+
+                // 💡 클린업 함수:
+                // 컴포넌트가 언마운트될 때 실행됨 (setInterval 정리)
+                return () => {
+                    clearInterval(timer); // 타이머 중단
+                    console.log('Timer 종료...'); // 언마운트 시점에 출력
+                };
+            }, []); // 빈 배열 → 최초 마운트 시에만 실행됨
+
+            return (
+                <>
+                    <h1>타이머를 시작합니다.</h1>
+                </>
+            );
+        }
+
+        // 타이머를 토글하는 상위 컴포넌트
+        function App() {
+
+            const [isTrue, setIsTrue] = useState(false); // 타이머 표시 여부 상태
+
+            return (
+                <>
+                    {/* 버튼 클릭 시 isTrue 상태 반전 */}
+                    <button onClick={() => setIsTrue(!isTrue)}>타이머 토글</button>
+
+                    {/* isTrue가 true일 때만 Timer 컴포넌트 렌더링 */}
+                    {isTrue && <Timer />}
+                </>
+            );
+        }
+        
+        ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+
+</body>
+
+</html>

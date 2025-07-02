@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>promise</title>
+</head>
+
+<body>
+
+    <script>
+        // increase 함수는 number를 받아 1초 후에 10을 더한 값을 Promise로 반환
+        function increase(number) {
+            const promise = new Promise((resolve, reject) => {
+                // 비동기 작업 시뮬레이션: 1초 대기
+                setTimeout(() => {
+                    const result = number + 10;
+
+                    // 조건 검사: 결과가 50 초과이면 에러를 reject
+                    if (result > 50) {
+                        const e = new Error('NumberTooBig');
+                        return reject(e);  // 실패 상태로 Promise 반환
+                    }
+
+                    // 정상 처리: 결과를 resolve로 반환
+                    resolve(result);
+                }, 1000);
+            });
+
+            return promise; // Promise 객체 반환
+        }
+
+        // increase(0)을 호출하면 Promise 객체가 즉시 반환됨
+        console.log(increase(0));
+        // 출력 예시: Promise { <pending> }
+        // 실제 결과는 1초 후에 resolve되거나 reject됨
+
+        // Promise 체이닝을 이용한 여러 단계 비동기 호출
+        increase(0)
+            .then(number => {
+                console.log(number);  // 10 출력
+                return increase(number);  // 10을 인자로 increase 호출 → 20
+            })
+            .then(number => {
+                console.log(number);  // 20 출력
+                return increase(number);  // 20 → 30
+            })
+            .then(number => {
+                console.log(number);  // 30 출력
+                return increase(number);  // 30 → 40
+            })
+            .then(number => {
+                console.log(number);  // 40 출력
+                return increase(number);  // 40 → 50
+            })
+            .then(number => {
+                console.log(number);  // 50 출력
+                return increase(number);  // 50 → 60 (이 경우 에러 발생 후 reject)
+            })
+            // 필요시 reject 에 들어간 에러객체를 .catch() 추가하여 처리 가능
+            .catch(e => {
+                console.error('에러 발생:', e.message);  // NumberTooBig 출력
+            });
+
+        /*
+        1. 중첩 콜백 (콜백 지옥)
+        
+        - 함수 안에 또 다른 콜백 함수를 중첩해서 넣는 방식
+        - 작업 순서는 보장되지만, 코드가 점점 깊어지고 복잡해짐
+        - 가독성과 유지보수가 어렵고, 에러 처리도 복잡함
+
+        예시:
+        increase(0, result => {
+        console.log(result);
+        increase(result, result => {
+            console.log(result);
+            increase(result, result => {
+                console.log(result);
+                // 계속 중첩...
+            });
+        });
+        });
+        */
+
+        /*
+          2. Promise 체이닝
+        
+          - 비동기 작업을 Promise 객체로 감싸고, then()으로 연결하는 방식
+          - 콜백 중첩 없이 순차적 실행이 가능해 코드가 깔끔하고 가독성이 좋음
+          - 에러 처리는 catch()에서 한 번에 할 수 있어 편리함
+        
+          예시:
+          increase(0)
+            .then(result => {
+                console.log(result);
+                return increase(result);
+            })
+            .then(result => {
+                console.log(result);
+                return increase(result);
+            })
+            // ...
+            .catch(error => {
+                console.error(error);
+            });
+        */
+
+        /*
+          요약:
+          - 중첩 콜백: 중첩 깊이 증가 → 가독성 ↓, 유지보수 어려움
+          - Promise: 체이닝으로 깔끔한 흐름 → 에러 처리 용이
+        */
+
+    </script>
+
+</body>
+
+
+
+</html>

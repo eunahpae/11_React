@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>async-intro</title>
+</head>
+
+<body>
+
+    <script>
+        // sayHello 함수 정의
+        function sayHello() {
+            console.log('Hello World!');
+        }
+
+        // -------------------------------
+        // 1. 동기적 작업
+        sayHello();        // 바로 실행됨
+        console.log('end'); // 위 함수 실행 후 출력
+        // 출력 순서:
+        // Hello World!
+        // end
+
+        // -------------------------------
+        // 2. 비동기적 작업
+        setTimeout(sayHello, 3000); // 3초 후 sayHello 실행 (비동기)
+        console.log('end');         // 먼저 실행됨
+
+        // 출력 순서:
+        // end         (즉시 실행됨)
+        // Hello World! (3초 후 실행됨)
+    </script>
+
+</body>
+
+</html>

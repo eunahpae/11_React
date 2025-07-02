@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>callback-hell</title>
+</head>
+
+<body>
+
+    <script>
+
+        // 🔧 비동기 작업을 시뮬레이션하는 함수
+        // 'number'를 받아서 1초 후에 10을 더한 값을 콜백 함수에 전달한다.
+        function increase(number, callback) {
+            setTimeout(() => {
+                const result = number + 10;
+
+                if (callback) {
+                    callback(result);
+                }
+            }, 1000);
+        }
+
+        // 한 번 실행시에는 큰 문제가 안됨
+        increase(0, result => console.log(result));
+
+        // ⛓️ 아래 코드는 "콜백 지옥(Callback Hell)"의 대표적인 예시이다.
+        /*
+            ❗ 콜백 지옥이란?
+            - 콜백 함수 안에 또 콜백을 넣고,
+            - 그 안에 또 콜백을 넣고,
+            - 이런 식으로 계속 중첩되는 코드 구조.
+
+            📛 문제점
+            - 들여쓰기가 점점 깊어지며 가독성이 떨어짐
+            - 유지보수 및 디버깅이 어려움
+            - 흐름을 한눈에 파악하기 어려움
+            - 에러 처리가 복잡해짐
+
+            ✅ 해결 방법
+            - Promise 또는 async/await를 사용하면 훨씬 가독성이 좋은 코드 작성 가능
+        */
+
+        // ⚠️ 콜백이 중첩되며 점점 깊어지는 구조 (콜백 헬)
+        console.log('start');
+        increase(0, result => {
+            console.log(result);
+            increase(result, result => {
+                console.log(result);
+                increase(result, result => {
+                    console.log(result);
+                    increase(result, result => {
+                        console.log(result);
+                        increase(result, result => {
+                            console.log(result);
+                            increase(result, result => {
+                                console.log(result);
+                                console.log('end');
+                            })
+                        })
+                    })
+                })
+            })
+        })
+
+    </script>
+
+</body>
+
+</html>
