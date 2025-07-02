@@ -1,0 +1,21 @@
+
+.MenuBox div {
+    display: inline-block;
+    margin: 10px;
+    width: 250px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 2px solid olive;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.MenuBox div:hover {
+    background-color: olive;
+    color: white;
+    cursor: pointer;
+    transform: translateY(-4px); /* 살짝 떠오르게 */
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
