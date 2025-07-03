@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React-Redux</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Redux 라이브러리 CDN -->
+    <script src="https://unpkg.com/redux@4.2.0/dist/redux.js"></script>
+    <!-- React-Redux 라이브러리 CDN 추가 -->
+    <script src="https://unpkg.com/react-redux@8.0.4/dist/react-redux.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        /* ReactRedux 객체에서 필요한 훅과 컴포넌트를 구조분해 할당
+            - useSelector: Redux store의 상태를 읽는 데 사용되는 Hook / 
+                           반드시 인자로 state를 매개변수로 하는 함수를 콜백함수로 전달해야 함.
+            - useDispatch: 액션을 디스패치(dispatch)하는 데 사용되는 Hook
+            - Provider: 전체 컴포넌트를 Redux store에 연결해주는 컴포넌트
+        */
+        const { useSelector, useDispatch, Provider } = ReactRedux;
+
+        // Redux에서 createStore 함수 가져오기
+        const { createStore } = Redux;
+
+        // 초기 상태 정의: 카운터 값 0
+        const initialState = 0;
+
+        // 리듀서 함수: 액션에 따라 상태(state)를 업데이트
+        function reducer(state = initialState, { type, payload }) {
+            // 구조분해 할당으로 액션 객체에서 type과 payload를 바로 추출
+            switch (type) {
+                case 'INCREMENT':
+                    // INCREMENT 액션일 경우, 상태를 증가시킴
+                    return state + payload.incrementValue;
+                case 'DECREMENT':
+                    // DECREMENT 액션일 경우, 상태를 감소시킴
+                    return state - payload.decrementValue;
+                default: return state;
+            }
+        }
+
+        const store = createStore(reducer);
+
+        // 리액트 앱의 루트 컴포넌트 정의
+        function App() {
+            // 현재 상태를 Redux store에서 가져오기
+            const count = useSelector(state => state);
+
+            // 액션을 발생시키기 위한 dispatch 함수 가져오기
+            const dispatch = useDispatch();
+
+            // 카운트 증가 함수: INCREMENT 액션 디스패치
+            const increaseCount = () => {
+                dispatch({
+                    type: 'INCREMENT',
+                    payload: {
+                        incrementValue: 1
+                    }
+                });
+            };
+
+            // 카운트 감소 함수: DECREMENT 액션 디스패치
+            const decreaseCount = () => {
+                dispatch({
+                    type: 'DECREMENT',
+                    payload: {
+                        decrementValue: 1
+                    }
+                });
+            };
+
+            // 렌더링: 현재 카운트 표시 및 버튼 2개
+            return (
+                <>
+                    <h1>Count : {count}</h1>
+                    <button onClick={increaseCount}>증가</button>
+                    <button onClick={decreaseCount}>감소</button>
+                </>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById("root")).render(
+            // Provider 컴포넌트로 App 컴포넌트를 감싸 Redux store를 React 앱 전체에 주입
+            <Provider store={store}>
+                <App />
+            </Provider>);
+    </script>
+
+</body>
+
+</html>

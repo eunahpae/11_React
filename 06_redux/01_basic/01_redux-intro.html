@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redux</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Redux CDN 추가 -->
+    <script src="https://unpkg.com/redux@4.2.0/dist/redux.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        /*
+         ✅ [Redux 개념 정리]
+ 
+         1. Redux란?
+            - 자바스크립트 애플리케이션에서 상태(state)를 예측 가능하게 만들기 위한 상태 관리 라이브러리입니다.
+            - 컴포넌트들이 공유하는 상태를 중앙 저장소(Store)에 보관하여, 컴포넌트 간 상태 전달을 단순화합니다.
+            - React뿐 아니라 Vue, Angular, 순수 JS 등에서도 사용 가능.
+ 
+         2. Redux의 핵심 구성 요소
+ 
+            ① Store (저장소)
+              - 애플리케이션 전역 상태를 저장하는 객체.
+              - createStore(reducer)를 통해 생성됩니다.
+              - 상태를 직접 수정하지 않고, 오직 Reducer를 통해서만 변경할 수 있습니다.
+ 
+            ② Action (행동)
+              - 상태에 어떤 변화가 필요한지를 설명하는 객체입니다.
+              - 최소한 `type` 필드를 반드시 포함해야 하며, 필요 시 `payload`로 추가 데이터 전달.
+ 
+                예시:
+                { type: "INCREMENT" }
+                { type: "ADD_USER", payload: { name: "Panda", age: 5 } }
+ 
+            ③ Reducer (리듀서)
+              - 현재 상태와 Action을 받아서, 다음 상태를 반환하는 순수 함수입니다.
+              - 상태를 직접 수정하지 않고, 항상 새로운 상태 객체를 반환해야 합니다 (불변성 유지).
+ 
+         3. Redux 동작 흐름
+ 
+            (1) 컴포넌트에서 Action을 dispatch함
+            (2) Store가 Reducer에게 전달함
+            (3) Reducer는 새로운 상태를 계산해서 반환함
+            (4) Store는 상태를 업데이트함
+            (5) 변경된 상태를 구독한 컴포넌트가 다시 렌더링됨
+         */
+
+        // Redux에서 createStore 함수만 구조분해로 가져옴
+        const { createStore } = Redux;
+
+        // 리듀서 함수: 상태(state)와 액션(action)을 인자로 받아 다음 상태를 반환
+        function counter(state = 0, action) {
+            /*
+              action 객체 예시:
+              {
+                  type: 'INCREMENT',                // 필수
+                  payload: { name: '판다', age: 5 } // 선택
+              }
+            */
+            switch (action.type) {
+                case 'INCREMENT':
+                    return state + 1; // 상태를 직접 수정하지 않고 새 상태 반환
+                case 'DECREMENT':
+                    return state - 1;
+                default:
+                    return state; // 아무 일도 없을 경우 기존 상태 반환
+            }
+        }
+
+        // createStore 함수를 통해 Store 생성 (리듀서를 인자로 전달)
+        const store = createStore(counter);
+
+        /*
+          ✅ store.subscribe(listener)
+          - 상태가 변경될 때마다 실행되는 콜백 함수 등록
+          - 주로 상태가 바뀔 때 UI를 업데이트하는 데 사용
+        */
+        store.subscribe(() => {
+            console.log('현재 상태:', store.getState());
+        });
+
+        /*
+            ✅ dispatch(action)
+
+            - 스토어에 상태 변경을 요청하는 유일한 방법이다.
+            - dispatch는 리듀서 함수를 호출하며, 현재 상태(state)는 리듀서의 첫 번째 인자로 자동 전달된다.
+            - 우리가 넘기는 action 객체는 리듀서의 두 번째 인자로 전달된다.
+
+            📌 dispatch 흐름:
+                1. dispatch({ type: 'INCREMENT' }) 호출
+                2. Redux는 현재 상태(state)와 action을 reducer 함수에 전달
+                3. reducer는 해당 action.type에 맞게 새로운 상태를 반환
+                4. 스토어는 새로운 상태로 업데이트
+                5. 구독자(subscribe 함수)가 있다면 실행됨
+
+            ⚠️ 상태(state)는 직접 변경할 수 없고 
+               반드시 action → dispatch → reducer를 통해 간접적으로만 변경 가능하다.
+            */
+        store.dispatch({ type: 'INCREMENT' });
+        store.dispatch({ type: 'INCREMENT' });
+        store.dispatch({ type: 'DECREMENT' });
+        store.dispatch({ type: '' });
+
+    </script>
+
+</body>
+
+</html>
