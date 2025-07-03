@@ -65,7 +65,72 @@
 
         const store = createStore(rootReducer);
 
-        ReactDOM.createRoot(document.getElementById("root")).render();
+        function App() {
+
+            console.log(useSelector(state => state));
+
+            /* combineReducers 를 이용하는 경우, 
+               useSelector의 콜백함수를 통해 리듀서별로 관리되는 state를 반환. */
+            const { currentCount } = useSelector(state => state.countReducer);
+            const { isActivity } = useSelector(state => state.activationReducer);
+            const { name, email, phone } = useSelector(state => state.userReducer);
+
+            const dispatch = useDispatch();
+
+            const increaseCount = () => {
+                dispatch({
+                    type: 'INCREMENT',
+                    payload: {
+                        incrementValue: 10
+                    }
+                })
+            }
+            const decreaseCount = () => {
+                dispatch({
+                    type: 'DECREMENT',
+                    payload: {
+                        decrementValue: 10
+                    }
+                })
+            }
+            const toggleActivation = () => {
+                dispatch({ type: 'TOGGLE' });
+            }
+            const onChangeHandler = (e) => {
+                dispatch({
+                    type: 'INPUT',
+                    payload: {
+                        name: e.target.name,
+                        value: e.target.value
+                    }
+                })
+            }
+
+            return (
+                <>
+                    <h1>currentCount : {currentCount}</h1>
+                    <button onClick={increaseCount}>증가</button>
+                    <button onClick={decreaseCount}>감소</button><br />
+                    <h1>isActivity : {isActivity.toString()}</h1>
+                    <button onClick={toggleActivation}>Toggle</button><br />
+                    <h1>input control</h1>
+                    <label>name : </label>
+                    <input type="text" name="name" value={name} onChange={onChangeHandler} />
+                    <label>email : </label>
+                    <input type="text" name="email" value={email} onChange={onChangeHandler} />
+                    <label>phone : </label>
+                    <input type="text" name="phone" value={phone} onChange={onChangeHandler} />
+                    <br />
+                    <h3>name : {name}</h3>
+                    <h3>email : {email}</h3>
+                    <h3>phone : {phone}</h3>
+                </>
+            )
+        }
+
+        ReactDOM.createRoot(document.getElementById("root")).render(
+            <Provider store={store}><App /></Provider>
+        );
     </script>
 
 </body>
