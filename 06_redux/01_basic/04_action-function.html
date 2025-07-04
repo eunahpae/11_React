@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>action-function</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/redux@4.2.0/dist/redux.js"></script>
+    <script src="https://unpkg.com/react-redux@8.0.4/dist/react-redux.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        const { Provider, useSelector, useDispatch } = ReactRedux;
+        const { createStore } = Redux;
+
+        /*  
+          Ducks 패턴은 Redux 코드를 모듈별로 깔끔하게 관리하는 방법이다.
+          상태 하나마다 관련된 초기값, 액션, 리듀서 등을 한 파일에 모아둬서 관리하기 쉽고 보기 편하다.
+        */
+
+        /* 초기값 */
+        // 카운트 상태의 시작 값은 0
+        const initialState = 0;
+
+        /* action */
+        /* 
+          액션 타입을 문자열 상수로 만든다. 
+          접두사를 붙이는 이유는 다른 모듈과 액션 이름이 겹치는 것을 막기 위해서이다.
+        */
+        const INCREMENT = 'count/INCREMENT';
+        const DECREMENT = 'count/DECREMENT';
+
+        /*  
+          액션 생성 함수
+          dispatch할 때 사용할 액션 객체를 만들어 반환한다.
+          이 함수는 호출하면 액션 객체가 나온다.
+        */
+        const increase = () => ({
+            type: INCREMENT,              // 어떤 액션인지 알려주는 타입
+            payload: {
+                incrementValue: 1        // 상태에 더할 값
+            }
+        })
+
+        const decrease = () => ({
+            type: DECREMENT,              // 어떤 액션인지 알려주는 타입
+            payload: {
+                decrementValue: 1        // 상태에서 뺄 값
+            }
+        })
+
+        /* reducer */
+        /*
+          리듀서는 현재 상태와 액션을 받아 다음 상태를 리턴하는 함수
+          초기 상태를 설정해주고,
+          액션 타입에 따라 상태를 증가하거나 감소시킨다.
+        */
+        function reducer(state = initialState, { type, payload }) {
+            switch (type) {
+                case INCREMENT:
+                    return state + payload.incrementValue;  // 증가 액션일 때 상태에 더함
+                case DECREMENT:
+                    return state - payload.decrementValue;  // 감소 액션일 때 상태에서 뺌
+                default:
+                    return state;  // 모르는 액션이면 현재 상태 그대로 반환
+            }
+        }
+
+
+        /*-----------------------------------------------------------------------*/
+
+        /* component */
+        function App() {
+
+            const count = useSelector(state => state);
+            const dispatch = useDispatch();
+
+            const increaseCount = () => {
+                /* 사전에 정의한 액션 함수를 호출하면 반환받은 액션 객체를 dispatch에 전달한다. 
+                호출 시 직접 action 객체를 리터럴로 작성하는 것보다 가독성, 재사용성이 증가한다. */
+                dispatch(increase());
+            }
+            
+            const decreaseCount = () => {
+                dispatch(decrease());
+            }
+
+            return (
+                <>
+                    <h1>Count : {count}</h1>
+                    <button onClick={increaseCount}>증가</button>
+                    <button onClick={decreaseCount}>감소</button>
+                </>
+            )
+        }
+
+
+        /*-----------------------------------------------------------------------*/
+
+        /* store */
+        const store = createStore(
+            reducer,
+            // 크롬 Redux DevTools 확장과 연동
+            window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+        );
+
+        /*-----------------------------------------------------------------------*/
+
+        ReactDOM.createRoot(document.getElementById("root")).render(
+            <Provider store={store}>
+                <App />
+            </Provider>);
+    </script>
+
+</body>
+
+</html>
