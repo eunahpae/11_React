@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>redux-toolkit</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- 
+      Redux Toolkit UMD 빌드 (브라우저용)
+      - 공식 Redux Toolkit 라이브러리를 브라우저에서 사용 가능하게 해준다.
+      - 이 스크립트로 전역 객체 RTK를 통해 createSlice, configureStore 등을 사용할 수 있다.
+      - 일반적으로는 npm 환경에서 사용하는 것이 정석이다.
+     -->
+    <script src="https://unpkg.com/@reduxjs/toolkit@1.9.5/dist/redux-toolkit.umd.js"></script>
+    <script src="https://unpkg.com/react-redux@8.0.4/dist/react-redux.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        const { Provider, useSelector, useDispatch } = ReactRedux;
+
+        // Redux Toolkit 기능 (createSlice, configureStore 등)
+        const { createSlice, configureStore } = RTK;
+
+        const counterSlice = createSlice({
+            name: 'count',
+            initialState: 0,
+            reducers: {
+                increase: (state, action) => state + (action.payload || 1),
+                decrease: (state, action) => state - (action.payload || 1)
+            }
+        });
+
+        console.log(counterSlice);
+
+        /* 액션 생성자와 리듀서 추출 */
+        const { increase, decrease } = counterSlice.actions;
+        const reducer = counterSlice.reducer;
+
+        /* 스토어 설정 */
+        const store = configureStore({
+            reducer: reducer
+        })
+
+        /* UI */
+        function App() {
+            const count = useSelector(state => state); 
+            const dispatch = useDispatch(); 
+
+            const increaseCount = () => {
+                dispatch(increase());
+            };
+
+            const decreaseCount = () => {
+                dispatch(decrease());
+            };
+            return (
+                <>
+                    <h1>Count : {count}</h1>
+                    <button onClick={increaseCount}>증가</button>
+                    <button onClick={decreaseCount}>감소</button>
+                </>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById("root")).render(
+            <Provider store={store}>
+                <App />
+            </Provider>
+        );
+    </script>
+
+</body>
+
+</html>
